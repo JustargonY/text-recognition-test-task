@@ -1,12 +1,16 @@
 from pathlib import Path
+import easyocr
+from PIL import Image
 
 
 class OCRModel:
-    def recognize_text(self, image: Path) -> str:
-        """
-        This method takes an image file as input and returns the recognized text from the image.
+    def __init__(self):
+        self.reader = easyocr.Reader(['en', 'ch_sim'], gpu=True)
 
-        :param image: The path to the image file.
-        :return: The recognized text from the image.
-        """
-        return 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+    def recognize_text(self, image: Path):
+        im = Image.open(image)
+        result = self.reader.readtext(im.filename)
+        s = ''
+        for i in result:
+            s += i[1] + ' '
+        return s[:-1]
